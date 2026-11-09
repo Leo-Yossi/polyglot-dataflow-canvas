@@ -1,0 +1,22 @@
+id: signal_board_view
+name: 电路板信号灯
+category: 实时渲染
+runtime: render
+entry: ""
+mode: stream
+stream_role: render
+render_type: signal_board
+interval_ms: 600
+description: PCB 深绿板 + 金色走线，内含红黄绿交通灯与 8 路 LED 阵列，按帧点亮/闪烁/告警
+inputs:
+  - name: packet
+    transport: memory_object
+    format_hint: "stream:signals"
+    accepts: ["stream:signals", "any"]
+    description: 上游信号流的一帧数据
+outputs: []
+params:
+  - key: lanes
+    type: int
+    default: 8
+    label: 显示 LED 路数

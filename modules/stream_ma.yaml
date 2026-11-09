@@ -1,0 +1,30 @@
+id: stream_ma
+name: 流上均线变换 MA5/MA10
+category: 实时处理
+runtime: python
+entry: modules/stream_ma.py
+entry_fn: tick
+mode: stream
+stream_role: transform
+interval_ms: 600
+description: 实时链路中间的普通 Python 模块，按端口名接收 candles 并附加两条均线
+inputs:
+  - name: candles
+    transport: memory_object
+    format_hint: "stream:ohlc"
+    accepts: ["stream:ohlc", "any"]
+    description: 上游 K 线数组（引擎按字段名自动拆包）
+outputs:
+  - name: market
+    transport: memory_object
+    format_hint: "stream:ohlc+ma"
+    description: 附加 ma5 / ma10 后的整包行情数据
+params:
+  - key: ma_short
+    type: int
+    default: 5
+    label: 短均线周期
+  - key: ma_long
+    type: int
+    default: 10
+    label: 长均线周期

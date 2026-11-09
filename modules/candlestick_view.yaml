@@ -1,0 +1,26 @@
+id: candlestick_view
+name: K线实时视图
+category: 实时渲染
+runtime: render
+entry: ""
+mode: stream
+stream_role: render
+render_type: candlestick
+interval_ms: 600
+description: 画布内嵌零依赖 Canvas K 线图（红涨绿跌），每帧重绘蜡烛 / MA5 / MA10 / 成交量
+inputs:
+  - name: quote
+    transport: memory_object
+    format_hint: "stream:ohlc+ma"
+    accepts: ["stream:ohlc*", "stream:ohlc+ma", "any"]
+    description: 上游行情流的一帧数据
+outputs: []
+params:
+  - key: show_volume
+    type: bool
+    default: true
+    label: 显示成交量
+  - key: show_ma
+    type: bool
+    default: true
+    label: 显示均线

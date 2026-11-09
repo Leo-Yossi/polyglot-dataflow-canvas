@@ -1,0 +1,35 @@
+id: stream_market
+name: 模拟行情流 · K线
+category: 实时数据源
+runtime: python
+entry: modules/stream_market.py
+entry_fn: tick
+mode: stream
+stream_role: source
+source_mode: python
+js_generator: market
+interval_ms: 600
+description: 每帧随机游走生成一根 OHLC K 线与成交量；可切换为浏览器 JS 数据源
+inputs: []
+outputs:
+  - name: quote
+    transport: memory_object
+    format_hint: "stream:ohlc"
+    description: 每帧一包 {candles, last, price, change_pct, volume}
+params:
+  - key: window
+    type: int
+    default: 36
+    label: 保留K线数
+  - key: start_price
+    type: int
+    default: 100
+    label: 初始价格
+  - key: volatility
+    type: int
+    default: 2
+    label: 波动幅度
+  - key: seed
+    type: int
+    default: 7
+    label: 随机种子

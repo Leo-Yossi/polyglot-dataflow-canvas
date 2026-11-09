@@ -1,0 +1,2 @@
+# scripts/ 用于在线编辑、新建的脚本以及 file_path transport 的临时文件，
+# 运行时产物由 .gitignore 排除；此文件仅保证 clone 后目录存在。

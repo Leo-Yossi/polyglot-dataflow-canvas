@@ -1,0 +1,17 @@
+id: frame_source
+name: 表格数据源（Frame）
+category: 数据源
+runtime: python
+entry: modules/frame_source.py
+description: 产出零依赖 Frame 表格，用于演示变量树把每列展开为 child 且 type_label 为列 dtype
+inputs: []
+outputs:
+  - name: table
+    transport: memory_object
+    format_hint: "frame:tabular"
+    description: 有 columns / dtypes 的表格对象
+params:
+  - key: rows
+    type: int
+    default: 4
+    label: 行数

@@ -1,0 +1,31 @@
+id: series_transform
+name: 序列处理器
+category: 变换处理
+runtime: python
+entry: modules/series_transform.py
+entry_fn: scale
+description: 任选 scale / normalize / moving_average / describe / execute 处理上游序列，可单独选择另一个 Python 环境执行
+inputs:
+  - name: seq
+    transport: memory_object
+    format_hint: "py:list"
+    accepts: ["py:list*", "any"]
+    description: 上游序列（list / tuple / 混合类型）
+outputs:
+  - name: series
+    transport: memory_object
+    format_hint: "py:list[float]"
+    description: 处理后的序列，或 describe 返回的统计 dict
+params:
+  - key: factor
+    type: int
+    default: 2
+    label: 缩放系数
+  - key: bias
+    type: int
+    default: 0
+    label: 偏移量
+  - key: window
+    type: int
+    default: 3
+    label: 滑动窗口

@@ -1,0 +1,38 @@
+id: series_source
+name: 随机序列数据源
+category: 数据源
+runtime: python
+entry: modules/series_source.py
+entry_fn: random_series
+description: 脚本内含多个顶层函数（random_series / wave_series / mixed_series / execute），可在节点面板里任选入口并切换 Python 环境
+inputs: []
+outputs:
+  - name: series
+    transport: memory_object
+    format_hint: "py:list[int]"
+    description: Python 原生 list；变量树逐元素标注 int / float / str
+params:
+  - key: count
+    type: int
+    default: 8
+    label: 序列长度
+  - key: seed
+    type: int
+    default: 42
+    label: 随机种子
+  - key: low
+    type: int
+    default: 0
+    label: 随机下界
+  - key: high
+    type: int
+    default: 100
+    label: 随机上界
+  - key: amplitude
+    type: int
+    default: 10
+    label: 波形振幅
+  - key: noise
+    type: int
+    default: 0
+    label: 波形噪声

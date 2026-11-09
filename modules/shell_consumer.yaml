@@ -1,0 +1,22 @@
+id: shell_consumer
+name: Shell 消费者
+category: 消费者
+runtime: shell
+entry: '"{python}" modules/shell_consumer.py'
+description: subprocess 执行，stdin 收字节、stdout 输出摘要字节，变量树只展示原始文本摘要
+inputs:
+  - name: payload
+    transport: bytes
+    format_hint: "text:lines"
+    accepts: ["text:lines"]
+    description: 只接受制表符分隔文本行（可改 format_hint 复现不兼容提示）
+outputs:
+  - name: stdout
+    transport: bytes
+    format_hint: "text:summary"
+    description: 进程标准输出的原始字节
+params:
+  - key: keyword
+    type: string
+    default: ""
+    label: 过滤关键字

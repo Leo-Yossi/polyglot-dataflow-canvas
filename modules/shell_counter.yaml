@@ -1,0 +1,22 @@
+id: shell_counter
+name: Shell 字符计数器
+category: 消费者
+runtime: shell
+entry: '"{python}" modules/shell_counter.py'
+description: 宽松格式的 Shell 消费者，演示 accepts 列表允许多种 format_hint 直接进入
+inputs:
+  - name: payload
+    transport: bytes
+    format_hint: "text:any"
+    accepts: ["text:lines", "text:summary", "text:any", "json:*", "any"]
+    description: 任意文本字节
+outputs:
+  - name: stdout
+    transport: bytes
+    format_hint: "text:summary"
+    description: 计数摘要
+params:
+  - key: top_n
+    type: int
+    default: 5
+    label: 显示词频前 N

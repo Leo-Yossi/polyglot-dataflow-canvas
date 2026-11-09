@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# 运行时生成（本机解释器登记、file_path 传输临时文件）
+envs.json
+scripts/_wire_*.bin
+*.log
+
+# 本地调试 / 编辑器产物
+.playwright-cli/
+.DS_Store
+.idea/
+.vscode/

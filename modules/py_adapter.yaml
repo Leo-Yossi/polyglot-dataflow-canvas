@@ -1,0 +1,26 @@
+id: py_adapter
+name: Python 适配器（对象 → 文本行）
+category: 转换与适配
+runtime: python
+entry: modules/py_adapter.py
+description: 一等公民适配器模块，把上游 memory_object 转成 bytes，供 Shell 消费者使用
+inputs:
+  - name: data
+    transport: memory_object
+    format_hint: "json:records"
+    accepts: ["json:records", "json:flat", "frame:tabular", "any"]
+    description: 上游 Python 原生对象
+outputs:
+  - name: payload
+    transport: bytes
+    format_hint: "text:lines"
+    description: UTF-8 编码的制表符分隔文本行
+params:
+  - key: include_header
+    type: bool
+    default: true
+    label: 包含表头
+  - key: delimiter
+    type: string
+    default: "\t"
+    label: 列分隔符

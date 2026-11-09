@@ -1,0 +1,25 @@
+id: py_source
+name: Python 数据源
+category: 数据源
+runtime: python
+entry: modules/py_source.py
+description: 生成混合原生类型的记录列表，用于验证变量树里的 list / int / str 类型标注
+inputs: []
+outputs:
+  - name: data
+    transport: memory_object
+    format_hint: "json:records"
+    description: 含 records、mixed、frame 的 Python 原生对象
+params:
+  - key: count
+    type: int
+    default: 5
+    label: 记录条数
+  - key: label
+    type: string
+    default: "batch-A"
+    label: 批次标签
+  - key: with_frame
+    type: bool
+    default: true
+    label: 附带 Frame 表格

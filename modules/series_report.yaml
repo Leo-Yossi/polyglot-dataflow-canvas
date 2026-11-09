@@ -1,0 +1,23 @@
+id: series_report
+name: 序列统计
+category: 分析统计
+runtime: python
+entry: modules/series_report.py
+entry_fn: summarize
+description: 任选 summarize / histogram 汇总上游序列，输出 dict 统计结果；可单独选择 Python 环境
+inputs:
+  - name: series
+    transport: memory_object
+    format_hint: "py:list"
+    accepts: ["py:list*", "py:dict", "any"]
+    description: 上游序列
+outputs:
+  - name: report
+    transport: memory_object
+    format_hint: "py:dict"
+    description: 统计结果 dict
+params:
+  - key: bins
+    type: int
+    default: 5
+    label: 直方图桶数

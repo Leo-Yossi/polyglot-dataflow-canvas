@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DataFlow Studio · 多语言模块化数据流平台（最小版）</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ 顶栏 ============ -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true">
+          <circle cx="7" cy="16" r="3.4" fill="#fff"/>
+          <rect x="13" y="12.6" width="6.8" height="6.8" rx="1.2" fill="#fff"/>
+          <path d="M25 11.6 L29.4 16 L25 20.4 L20.6 16 Z" fill="#fff"/>
+          <path d="M10.4 16 H13 M19.8 16 H20.6" stroke="#fff" stroke-width="1.6"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="brand-title">DataFlow Studio <span class="ver">v0.1</span></div>
+        <div class="brand-sub">多语言模块化数据流平台 · 最小版</div>
+      </div>
+    </div>
+
+    <div class="topbar-meta">
+      <span id="healthBadge" class="health checking"><i></i>检测后端中…</span>
+      <span class="meta-chip" id="statNodes">节点 0</span>
+      <span class="meta-chip" id="statEdges">连线 0</span>
+      <span class="meta-chip" id="statRuntime">—</span>
+    </div>
+
+    <div class="topbar-actions">
+      <button id="btnStreamDemo" class="btn ghost" title="一键放置 K 线与电路板信号灯两条实时链路并开始推流">实时演示</button>
+      <button id="btnSeries" class="btn ghost" title="一键放置：随机序列数据源 → 序列处理器 → 序列统计（可选不同 Python 环境）">序列示例</button>
+      <button id="btnExample" class="btn ghost" title="一键放置验收闭环：Python 数据源 → Python 适配器 → Shell 消费者">验收示例</button>
+      <button id="btnReset" class="btn ghost">清空画布</button>
+      <button id="btnRun" class="btn primary"><span class="play">▶</span> 运行数据流</button>
+    </div>
+  </header>
+
+  <!-- ============ 工作区 ============ -->
+  <div class="workspace">
+
+    <!-- 左：模块库 -->
+    <aside class="library">
+      <div class="panel-head">
+        <span>模块库</span>
+        <span class="head-hint">Manifest 驱动</span>
+      </div>
+      <div class="lib-search">
+        <svg viewBox="0 0 16 16" width="14" height="14"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10.5 10.5 L14 14" stroke="currentColor" stroke-width="1.6"/></svg>
+        <input id="libSearch" type="text" placeholder="搜索模块 / 运行时…" autocomplete="off">
+      </div>
+      <div id="libList" class="lib-list"></div>
+      <div class="legend">
+        <div class="legend-title">端口形状 · transport</div>
+        <div class="legend-row"><span class="shape circle"></span> memory_object <em>圆</em></div>
+        <div class="legend-row"><span class="shape square"></span> bytes <em>方</em></div>
+        <div class="legend-row"><span class="shape diamond"></span> file_path <em>菱形</em></div>
+        <div class="legend-note">悬停端口查看 format_hint；点击输出端口再点击输入端口可连线。</div>
+      </div>
+    </aside>
+
+    <!-- 中：画布 -->
+    <main class="canvas-wrap">
+      <div class="canvas-bar">
+        <span class="canvas-title">数据流画布</span>
+        <span id="canvasHint" class="canvas-hint">从左侧拖入模块，或点击「实时演示」</span>
+        <span class="canvas-spacer"></span>
+        <div class="stream-ctl">
+          <button id="btnCandleExample" class="mini-btn" title="只放 K 线实时链路">K线示例</button>
+          <button id="btnSignalExample" class="mini-btn" title="只放电路板信号灯实时链路">信号灯示例</button>
+          <button id="btnStream" class="mini-btn" title="启动 / 停止后台 tick 推流">▶ 开始推流</button>
+          <select id="streamInterval" title="推流间隔（毫秒）">
+            <option value="250">250 ms</option>
+            <option value="500" selected>500 ms</option>
+            <option value="1000">1000 ms</option>
+            <option value="2000">2000 ms</option>
+          </select>
+          <span id="streamStatus" class="stream-status"><i class="live-dot"></i>实时流未启动</span>
+        </div>
+        <button id="btnFit" class="mini-btn" title="回到画布左上角">回到原点</button>
+      </div>
+      <div id="canvas" class="canvas">
+        <div id="canvasInner" class="canvas-inner">
+          <svg id="wires" class="wires" width="1800" height="1200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#4a76d8"/>
+              </marker>
+              <marker id="arrowWarn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M 0 0 L 10 5 L 0 10 z" fill="#e08a2e"/>
+              </marker>
+            </defs>
+            <g id="wirePaths"></g>
+            <path id="draftWire" class="wire-draft" d="" hidden></path>
+          </svg>
+          <div id="nodesLayer" class="nodes-layer"></div>
+          <div id="badgeLayer" class="badge-layer"></div>
+          <div id="canvasEmpty" class="canvas-empty">
+            <div class="empty-icon">◇</div>
+            <div class="empty-title">画布还是空的</div>
+            <div class="empty-sub">拖拽左侧模块到这里，或点击右上角「加载验收示例」</div>
+          </div>
+        </div>
+      </div>
+      <div id="toastArea" class="toast-area"></div>
+    </main>
+
+    <!-- 右：检查器 -->
+    <aside class="inspector">
+      <div class="panel-head">
+        <span>节点检查器</span>
+        <span class="head-hint" id="inspectorNodeName">未选中</span>
+      </div>
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-tab="params">参数</button>
+        <button class="tab" data-tab="inputs">输入变量树</button>
+        <button class="tab" data-tab="outputs">输出变量树</button>
+        <button class="tab" data-tab="summary">执行摘要</button>
+      </div>
+      <div id="tabBody" class="tab-body"></div>
+    </aside>
+  </div>
+
+  <!-- ============ 状态栏 ============ -->
+  <footer class="statusbar">
+    <span id="statusLeft">就绪 · 后端会真实执行每个模块的脚本与 Shell 子进程</span>
+    <span id="statusRight">Python / Shell · memory_object · bytes · file_path</span>
+  </footer>
+</div>
+
+<!-- ============ 模态框：人工确认 ============ -->
+<div id="confirmModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-head"><span id="confirmTitle">连线兼容性提示</span><button class="modal-x" data-close="confirmModal">×</button></div>
+    <div class="modal-body" id="confirmBody"></div>
+    <div class="modal-foot" id="confirmFoot"></div>
+  </div>
+</div>
+
+<!-- ============ 模态框：脚本编辑 / 新建 ============ -->
+<div id="scriptModal" class="modal hidden">
+  <div class="modal-card wide">
+    <div class="modal-head">
+      <span id="scriptModalTitle">编辑脚本</span>
+      <button class="modal-x" data-close="scriptModal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="path-row">
+        <label>脚本路径</label>
+        <input id="scriptPath" type="text" class="mono" spellcheck="false" placeholder="modules/xxx.py 或 scripts/xxx.py">
+      </div>
+      <div class="code-hint">脚本里可以写任意顶层函数，在节点面板的「入口函数」下拉里选一个执行；形参名会按 <code>inputs</code> 端口 / <code>PARAMS</code> 参数自动注入。保留 <code>def execute(inputs)</code> 也完全兼容。返回 <code>dict</code> 时键名建议用输出端口名。</div>
+      <textarea id="scriptEditor" class="code-editor" spellcheck="false"></textarea>
+      <div id="scriptStatus" class="code-status"></div>
+    </div>
+    <div class="modal-foot">
+      <span class="modal-foot-hint">保存后立即写盘，节点会切换为按文件执行</span>
+      <button class="btn ghost" data-close="scriptModal">取消</button>
+      <button id="btnSaveScript" class="btn primary">保存脚本</button>
+    </div>
+  </div>
+</div>
+
+<script src="/streams.js"></script>
+<script src="/renderers.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+id: json_normalizer
+name: JSON 扁平化适配器
+category: 转换与适配
+runtime: python
+entry: modules/json_normalizer.py
+description: 用户可自行编写的一等公民适配器：把嵌套记录压平成单层 dict，全程保持 memory_object
+inputs:
+  - name: data
+    transport: memory_object
+    format_hint: "json:records"
+    accepts: ["json:records", "json:flat", "any"]
+    description: 嵌套记录对象
+outputs:
+  - name: flat
+    transport: memory_object
+    format_hint: "json:flat"
+    description: 单层键值字典
+params:
+  - key: prefix
+    type: string
+    default: "item"
+    label: 键前缀

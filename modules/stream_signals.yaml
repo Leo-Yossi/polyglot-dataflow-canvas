@@ -1,0 +1,35 @@
+id: stream_signals
+name: 电路板信号流 · LED
+category: 实时数据源
+runtime: python
+entry: modules/stream_signals.py
+entry_fn: tick
+mode: stream
+stream_role: source
+source_mode: python
+js_generator: signals
+interval_ms: 600
+description: 每帧输出红黄绿交通灯相位与 8 路 LED 的亮/灭/闪烁/故障状态
+inputs: []
+outputs:
+  - name: packet
+    transport: memory_object
+    format_hint: "stream:signals"
+    description: 每帧一包 {light, signals, faults, phase, cycle}
+params:
+  - key: lanes
+    type: int
+    default: 8
+    label: LED 路数
+  - key: period
+    type: int
+    default: 12
+    label: 交通灯周期帧数
+  - key: fault_rate
+    type: int
+    default: 6
+    label: 故障概率(百分数)
+  - key: seed
+    type: int
+    default: 11
+    label: 随机种子

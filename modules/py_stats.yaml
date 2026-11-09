@@ -1,0 +1,22 @@
+id: py_stats
+name: Python 统计模块
+category: 分析统计
+runtime: python
+entry: modules/py_stats.py
+description: 对上游记录做数值统计，输出仍是原生 dict，可继续接其它 Python 模块
+inputs:
+  - name: data
+    transport: memory_object
+    format_hint: "json:records"
+    accepts: ["json:records", "json:flat", "any"]
+    description: 记录对象
+outputs:
+  - name: stats
+    transport: memory_object
+    format_hint: "json:stats"
+    description: 统计结果字典
+params:
+  - key: field
+    type: string
+    default: "score"
+    label: 统计字段
